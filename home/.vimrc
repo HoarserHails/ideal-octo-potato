@@ -1,14 +1,17 @@
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Start with the defaults.
+
 unlet! skip_defaults_vim
 source $VIMRUNTIME/defaults.vim
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Disable Newtr plug-in.
+
 let loaded_netrwPlugin=1
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Install plugins.
+
 call plug#begin(expand('~/.vim/plugged'))
 
 	" The default plugin directory will be as follows:
@@ -40,7 +43,7 @@ call plug#begin(expand('~/.vim/plugged'))
 	Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 	Plug 'junegunn/fzf.vim'         " fuzzy search
 	Plug 'junegunn/vim-easy-align'  " alignment
-	Plug 'preservim/nerdtree', { 'on': 'NERDTree' }
+	Plug 'preservim/nerdtree', { 'on': [ 'NERDTree', 'NERDTreeToggle' ] }
 	Plug 'simeji/winresizer'        " window resizer
 
 call plug#end()
@@ -78,7 +81,6 @@ set viminfo=!,%,<800,'10,/50,:100,h,f0,n~/.vim/cache/.viminfo
 
 set background=light           " light background"
 set backspace=indent,eol,start " backspace through everything
-set colorcolumn=80             " show 80 column marker"
 set cursorline                 " highlight current line
 set display=lastline           " show as much as possible of the last line
 set laststatus=2               " always show status line
@@ -135,6 +137,7 @@ endif
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Override auto comment continuation feature for all file types.
+
 augroup NoAutoComment
   au!
   au FileType * setlocal formatoptions-=cro
@@ -142,12 +145,14 @@ augroup end
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Close the tab if NERDTree is the only window remaining in it.
+
 autocmd BufEnter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree())
 			\    |   call feedkeys(":quit\<CR>:\<BS>")
 			\    | endif
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Language server configuration.
+
 let g:ale_completion_enabled = 1
 let g:ale_open_list = 1
 let g:ale_virtualtext_cursor = 'disabled'
@@ -169,37 +174,58 @@ let g:ale_fixers = {
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Mappings.
 
+" https://stackoverflow.com/questions/3776117/what-is-the-difference-between-the-remap-noremap-nnoremap-and-vnoremap-mapping
+
 "" change the leader to comma
 let mapleader = ','
 
 "" open terminal
-map <silent> <Leader>' :terminal<CR>
+map <Leader>' :terminal<CR>
 
 "" cycle through buffers
-nnoremap <silent> <Leader>bp :bprevious<CR>
-nnoremap <silent> <Leader>bn :bnext<CR>
-nnoremap <silent> <Leader>bf :bfirst<CR>
-nnoremap <silent> <Leader>bl :blast<CR>
-nnoremap <silent> <Leader>bd :bd<CR>
-nnoremap <silent> <Leader>bk :bw<CR>
+nnoremap <Leader>bp :bprevious<CR>
+nnoremap <Leader>bn :bnext<CR>
+nnoremap <Leader>bf :bfirst<CR>
+nnoremap <Leader>bl :blast<CR>
+nnoremap <Leader>bd :bd<CR>
+nnoremap <Leader>bk :bw<CR>
 
 "" folding
-nnoremap <silent> <Leader>f0 :set foldlevel=0<CR>
-nnoremap <silent> <Leader>f1 :set foldlevel=1<CR>
-nnoremap <silent> <Leader>f2 :set foldlevel=2<CR>
-nnoremap <silent> <Leader>f3 :set foldlevel=3<CR>
-nnoremap <silent> <Leader>f4 :set foldlevel=4<CR>
-nnoremap <silent> <Leader>f5 :set foldlevel=5<CR>
-nnoremap <silent> <Leader>f6 :set foldlevel=6<CR>
-nnoremap <silent> <Leader>f7 :set foldlevel=7<CR>
-nnoremap <silent> <Leader>f8 :set foldlevel=8<CR>
-nnoremap <silent> <Leader>f9 :set foldlevel=9<CR>
+nnoremap <Leader>0 :set foldlevel=0<CR>
+nnoremap <Leader>1 :set foldlevel=1<CR>
+nnoremap <Leader>2 :set foldlevel=2<CR>
+nnoremap <Leader>3 :set foldlevel=3<CR>
+nnoremap <Leader>4 :set foldlevel=4<CR>
+nnoremap <Leader>5 :set foldlevel=5<CR>
+nnoremap <Leader>6 :set foldlevel=6<CR>
+nnoremap <Leader>7 :set foldlevel=7<CR>
+nnoremap <Leader>8 :set foldlevel=8<CR>
+nnoremap <Leader>9 :set foldlevel=9<CR>
 
 "" visual shifting (does not exit Visual mode)
 vnoremap < <gv
 vnoremap > >gv
 
-"" open tag bar
+"" NERDTree
+"" https://github.com/preservim/nerdtree
+nmap <F9> :NERDTreeToggle<CR>
+
+"" FZF
+"" https://thevaluable.dev/practical-guide-fzf-example/
+nnoremap <leader>f :FZF <CR>
+nnoremap <leader>F :Files <CR>
+
+"" FZF selecting mappings
+nmap <leader><tab> <plug>(fzf-maps-n)
+xmap <leader><tab> <plug>(fzf-maps-x)
+omap <leader><tab> <plug>(fzf-maps-o)
+
+"" FZF insert mode completion
+imap <C-x><C-k> <plug>(fzf-complete-word)
+imap <C-x><C-f> <plug>(fzf-complete-path)
+imap <C-x><C-l> <plug>(fzf-complete-line)
+
+"" open Tagbar
 nmap <F8> :TagbarToggle<CR>
 
 "" start interactive EasyAlign in visual mode (e.g. vipga)
